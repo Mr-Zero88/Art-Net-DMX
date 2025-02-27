@@ -76,7 +76,7 @@ let mhipan = false;
 let mhay = true;
 let mhax = false;
 let panValue = 0;
-let direction = 5;
+let direction = 2;
 
 setInterval(() => {
   degres = (degres + 5) % 360;
@@ -108,6 +108,7 @@ const beat = () => {
   lastBeat = Date.now();
   degres = (degres + 180) % 360;
   mhcolor = (mhcolor + 1) % 8;
+  mhy = (mhy == 0 ? 100 : 0);
   lasercolor = (lasercolor + 1) % 7;
   console.log(distance);
 };
