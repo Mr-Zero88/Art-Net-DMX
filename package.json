@@ -41,7 +41,6 @@
       "mic6@2.1.2": "patches/mic6@2.1.2.patch"
     },
     "onlyBuiltDependencies": [
-      "ffi-napi",
       "ref-napi",
       "speaker"
     ]

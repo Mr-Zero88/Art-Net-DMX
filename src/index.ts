@@ -92,7 +92,7 @@ setInterval(() => {
   //par5.setColor(...hsl2rgb(degres, 1, 0.5));
   
   dmx.transmit();
-}, 100);
+}, 50);
 
 /*
 let panValue = 0;
@@ -160,7 +160,7 @@ const soundOptions = {
 
 let lastBeat = Date.now();
 new Microphone({ ...soundOptions, device: "pipewire" })
-  .pipe(new BeatDetector({ sensitivity: 0.8 }))
+  .pipe(new BeatDetector({ sensitivity: 0.7 }))
   .on('peak-detected', () => { if (Math.abs(lastBeat - Date.now()) < 100) return; beat(Math.abs(lastBeat - Date.now())); lastBeat = Date.now(); })
   .pipe(new Gain({ gain: 0, ...soundOptions }))
   .pipe(new Speaker({ ...soundOptions }));
