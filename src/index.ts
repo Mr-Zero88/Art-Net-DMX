@@ -98,9 +98,8 @@ setInterval(() => {
 
   laser.setColor(lasercolor);
 
-
   dmx.transmit();
-}, 50);
+}, 100);
 
 const beat = (distance: number) => {
   degres = (degres + 180) % 360;
@@ -114,27 +113,32 @@ let strobepars = false;
 let strobemovingheads = false;
 let strobewhite = false;
 
+process.stdin.setRawMode(true);
 process.stdin.on('data', (data) => {
   //console.log(data);
-  // if (Math.abs(lastBeat - Date.now()) < 25) return; 
-  // beat(Math.abs(lastBeat - Date.now())); lastBeat = Date.now();
-  if(data.at(0) == 0x73) {
+  if(data.at(0) == 0x0d) {
+    // if (Math.abs(lastBeat - Date.now()) < 25) return; 
+    // beat(Math.abs(lastBeat - Date.now())); lastBeat = Date.now();
+  } else if(data.at(0) == 0x73) {
     strobepars = !strobepars;
     par1.setStrobe(!strobepars ? 0 : 250);
     par2.setStrobe(!strobepars ? 0 : 250);
     par3.setStrobe(!strobepars ? 0 : 250);
     par4.setStrobe(!strobepars ? 0 : 250);
     par5.setStrobe(!strobepars ? 0 : 250);
+    dmx.transmit();
     console.log("strobe pars", strobepars);
   } else if(data.at(0) == 0x6d) {
     strobemovingheads = !strobemovingheads;
     mh1.setStrobe(!strobemovingheads ? 8 : 130);
     mh2.setStrobe(!strobemovingheads ? 8 : 130);
+    dmx.transmit();
     console.log("strobe movingheads", strobemovingheads);
   } else if(data.at(0) == 0x77) {
     strobewhite = !strobewhite;
     strobe1.setDimmer(!strobewhite ? 0 : 255);
     strobe2.setDimmer(!strobewhite ? 0 : 255);
+    dmx.transmit();
     console.log("strobe white", strobewhite);
   }
 })
@@ -150,6 +154,6 @@ const soundOptions = {
 let lastBeat = Date.now();
 new Microphone({ ...soundOptions, device: "pipewire" })
   .pipe(new BeatDetector({ sensitivity: 0.7 }))
-  .on('peak-detected', () => { if (Math.abs(lastBeat - Date.now()) < 50) return; beat(Math.abs(lastBeat - Date.now())); lastBeat = Date.now(); })
+  .on('peak-detected', () => { if (Math.abs(lastBeat - Date.now()) < 100) return; beat(Math.abs(lastBeat - Date.now())); lastBeat = Date.now(); })
   .pipe(new Gain({ gain: 0, ...soundOptions }))
   .pipe(new Speaker({ ...soundOptions }));
