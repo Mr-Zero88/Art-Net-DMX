@@ -21,9 +21,9 @@
     "@types/through2": "^2.0.38",
     "dmxnet": "git+https://git@github.com/margau/dmxnet.git",
     "fili": "^2.0.3",
-    "mic6": "^2.1.2",
+    "mic6": "2.1.2",
     "sliding-window-max": "^1.1.0",
-    "speaker": "^0.5.4",
+    "speaker": "0.5.4",
     "through2": "^4.0.2",
     "tsconfig-paths": "^4.2.0",
     "webview-nodejs": "^0.1.5"
@@ -39,6 +39,17 @@
     "patchedDependencies": {
       "speaker@0.5.4": "patches/speaker@0.5.4.patch",
       "mic6@2.1.2": "patches/mic6@2.1.2.patch"
-    }
-  }
+    },
+    "ignoredBuiltDependencies": [
+      "ffi-napi",
+      "ref-napi",
+      "speaker"
+    ],
+    "onlyBuiltDependencies": [
+      "ffi-napi",
+      "ref-napi",
+      "speaker"
+    ]
+  },
+  "packageManager": "pnpm@10.5.2+sha512.da9dc28cd3ff40d0592188235ab25d3202add8a207afbedc682220e4a0029ffbff4562102b9e6e46b4e3f9e8bd53e6d05de48544b0c57d4b0179e22c76d1199b"
 }
