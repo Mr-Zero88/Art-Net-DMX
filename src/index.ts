@@ -99,9 +99,13 @@ setInterval(() => {
   laser.setColor(lasercolor);
 
   dmx.transmit();
-}, 100);
+}, 50);
 
-const beat = (distance: number) => {
+let lastBeat = Date.now();
+const beat = () => {
+  if (Math.abs(lastBeat - Date.now()) < 50) return;
+  let distance = Math.abs(lastBeat - Date.now());
+  lastBeat = Date.now();
   degres = (degres + 180) % 360;
   mhcolor = (mhcolor + 1) % 8;
   lasercolor = (lasercolor + 1) % 7;
@@ -117,8 +121,7 @@ process.stdin.setRawMode(true);
 process.stdin.on('data', (data) => {
   //console.log(data);
   if(data.at(0) == 0x0d) {
-    // if (Math.abs(lastBeat - Date.now()) < 25) return; 
-    // beat(Math.abs(lastBeat - Date.now())); lastBeat = Date.now();
+    beat();
   } else if(data.at(0) == 0x73) {
     strobepars = !strobepars;
     par1.setStrobe(!strobepars ? 0 : 250);
@@ -143,17 +146,18 @@ process.stdin.on('data', (data) => {
   }
 })
 
-
-
 const soundOptions = {
   channels: 2,
   bitDepth: 16,
   sampleRate: 44100
 }
 
-let lastBeat = Date.now();
+let sink = new Speaker.Writable({write: (_, e, done) => done()});
 new Microphone({ ...soundOptions, device: "pipewire" })
-  .pipe(new BeatDetector({ sensitivity: 0.7 }))
-  .on('peak-detected', () => { if (Math.abs(lastBeat - Date.now()) < 100) return; beat(Math.abs(lastBeat - Date.now())); lastBeat = Date.now(); })
-  .pipe(new Gain({ gain: 0, ...soundOptions }))
-  .pipe(new Speaker({ ...soundOptions }));
+  .pipe(new BeatDetector({ sensitivity: 0.9 }))
+  .on('peak-detected', beat).pipe(sink)
+  //.pipe(new Gain({ gain: 0, ...soundOptions }))
+  //.pipe(new Speaker({ ...soundOptions }));
+
+
+  // lsp-plugins-para-equalizer-x16-mono -c ~/bass-lowpass.cfg -hl

@@ -36,10 +36,11 @@ export default class BeatDetector extends Transform {
   }
 
   private analyze(buffer: Buffer): void {
-    let debugBuffer = Buffer.alloc(buffer.length);
+    //let debugBuffer = Buffer.alloc(buffer.length);
     for (let i = 0; i < buffer.length; i += 4) {
       const left = buffer.readInt16LE(i);
-      const filteredLeft = this.leftFilter.singleStep(left);
+      if(left == 0) continue;
+      const filteredLeft = left; //this.leftFilter.singleStep(left);
       let threshold = Math.max(this.slidingWindowMax.add(filteredLeft) * this.sensitivity, this.minThreashold);
       let overThreshold = filteredLeft >= threshold;
       let enoughTimeSinceLastPeak = this.lastPeakDistance > MIN_PEAK_DISTANCE;
@@ -53,6 +54,7 @@ export default class BeatDetector extends Transform {
       // debugBuffer.writeInt16LE(overThreshold ? MAX_INT16 : 0, i + 2);
       // debugBuffer.writeInt16LE(Math.min(filteredLeft), i);
       // debugBuffer.writeInt16LE(filteredLeft, i + 2);
+      
     }
     this.push(buffer);
   }
